@@ -21,7 +21,7 @@ fi
 
 
 #  downlowd the newest debian-*-amd64-netinst.iso
-wget --recursive --no-host-directories --no-clobber --cut-dirs=5 --no-parent --accept "debian-[!mac]*-amd64-netinst.iso" --reject "*update*" ${NETINSTISO} -P ./
+wget --recursive --no-host-directories --cut-dirs=5 --no-parent --accept "debian-[!mac]*-amd64-netinst.iso" --reject "*update*" ${NETINSTISO} -P ./
 
 
 # verify the checksum
@@ -32,8 +32,6 @@ fi
 
 
 # start a for loop for every pressed
-
-
 ENVIRONMENTS=(
     INSIDE
     DMZ
@@ -49,7 +47,7 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
     cd "${ENVIRONMENT}" || exit
 
 
-    #if ther is a tmp dir it gets deleted
+    #if there is a tmp dir it gets deleted
     if [ -d "${ISOFILEDIR}" ]; then
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
