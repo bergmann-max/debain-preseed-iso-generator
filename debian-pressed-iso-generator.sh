@@ -2,7 +2,6 @@
 # This script generates debian ISOs with preseed for multiple environments
 
 ISOFILEDIR="isofiles"
-NETINST="debian-*-amd64-netinst.iso"
 # URL to the newst debian-*-amd64-netinst.iso
 NETINSTISO="ftp://cdimage.debian.org/cdimage/release/current/amd64/iso-cd"
 # URL to debian-*-amd64-netinst.iso checksum
@@ -15,7 +14,7 @@ cd "${BASEDIR}" || exit
 
 
 # delet debian-*-amd64-netinst.iso
-if [ -f "$NETINST" ]; then
+if [ -f debian-*-amd64-netinst.iso ]; then
     rm --verbose "$NETINST"
 fi
 
