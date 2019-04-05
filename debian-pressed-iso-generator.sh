@@ -3,7 +3,7 @@
 
 # name of tmp dir
 ISOFILEDIR="isofiles"
-
+# filename debian netinstall iso 
 NETINST="debian-*-amd64-netinst.iso"
 # URL to the newst debian-*-amd64-netinst.iso
 NETINSTISO="ftp://cdimage.debian.org/cdimage/release/current/amd64/iso-cd"
