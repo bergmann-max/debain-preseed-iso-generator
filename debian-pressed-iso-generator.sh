@@ -16,7 +16,7 @@ BASEDIR=$(dirname "$0")
 cd "${BASEDIR}" || exit
 
 
-# delet 
+# delet old ISO file
 if [ -f "${NETINST}" ]; then
     rm --verbose "$NETINST"
 fi
@@ -50,12 +50,13 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
 
 
     #if there is a tmp dir it gets deleted
+    # sudo is needed because some files from the ISO tmp won't deleted
     if [ -d "${ISOFILEDIR}" ]; then
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
 
 
-    # possible old preseed iso gets deleted
+    # possible old preseed ISO gets deleted
     if [ -f "${ISOFILE}" ]; then
         rm --verbose "${ISOFILE}"
     fi
@@ -88,6 +89,7 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
 
 
     # del tmp dir
+    # sudo is needed because some files from the ISO tmp won't deleted
     if [ -d "${ISOFILEDIR}" ]; then
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
