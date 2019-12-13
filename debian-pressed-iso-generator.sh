@@ -23,8 +23,7 @@ fi
 
 
 #  downlowd the newest debian-*-amd64-netinst.iso
-wget --recursive --no-host-directories --cut-dirs=5 --no-parent --accept "debian-[!mac]*-amd64-netinst.iso" --reject "*update*" ${NETINSTISO} -P ./
-
+wget --recursive --no-host-directories --cut-dirs=5 --no-parent --accept "debian-[!mac!edu]*-amd64-netinst.iso" --reject "*update*" ${NETINSTISO} --directory-prefix="./"
 
 # verify the checksum
 if [[ -n $(head --lines=1 <(curl --silent ${CHECKSUM} 2> /dev/null) | sha256sum --check --quiet) ]]; then
