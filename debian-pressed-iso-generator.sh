@@ -22,12 +22,12 @@ if [ -f "${NETINST}" ]; then
 fi
 
 
-#  downlowd the newest debian-*-amd64-netinst.iso
+# downlowd the newest debian-*-amd64-netinst.iso
 wget --recursive --no-host-directories --cut-dirs=5 --no-parent --accept "debian-[!mac!edu]*-amd64-netinst.iso" --reject "*update*" ${NETINSTISO} --directory-prefix="./"
 
 # verify the checksum
 if [[ -n $(head --lines=1 <(curl --silent ${CHECKSUM} 2> /dev/null) | sha256sum --check --quiet) ]]; then
-    printf "\nRichtige ISO vorhanden?\n"
+    printf "\nAbort: wrong iso\n"
     exit
 fi
 
@@ -48,8 +48,8 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
     cd "${ENVIRONMENT}" || exit
 
 
-    #if there is a tmp dir it gets deleted
-    # sudo is needed because some files from the ISO tmp won't deleted
+    # if there is a tmp dir it gets deleted
+    # sudo is needed because some of the files in the ISO tmp will not be deleted.
     if [ -d "${ISOFILEDIR}" ]; then
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
@@ -62,7 +62,7 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
 
 
     # unzip the newest debian-*-amd64-netinst.iso into a tmp dir
-    7z x -o"${ISOFILEDIR}" ../debian-*-amd64-netinst.iso
+    7z x  ../debian-*-amd64-netinst.iso -o"${ISOFILEDIR}"
 
 
     # Put the  preseed.cfg into initrd
@@ -87,8 +87,8 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
     isohybrid "${ISOFILE}"
 
 
-    # del tmp dir
-    # sudo is needed because some files from the ISO tmp won't deleted
+    # delet tmp dir
+    # sudo is needed because some of the files in the ISO tmp will not be deleted
     if [ -d "${ISOFILEDIR}" ]; then
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
