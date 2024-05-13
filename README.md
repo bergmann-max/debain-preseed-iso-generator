@@ -19,14 +19,14 @@ To use this script, follow these steps:
 
         $ cd debain-pressed-iso-generator
 
-1. Put your <code>preseed.cfg</code> files in the <code>DMZ</code> and <code>INSSIDE</code> directories.
+1. Put your <code>preseed.cfg</code> files in the <code>DMZ</code> and <code>INSIDE</code> directories.
 1. Make the script executable:
 
-       $ chmod +x debian-pressed-iso-generator.sh
+       $ chmod +x debian-preseed-iso-generator.sh
 
 1. Run the script:
 
-       $ ./debian-pressed-iso-generator.sh
+       $ ./debian-preseed-iso-generator.sh
 
 1. After the script has finished running, you will find the generated ISO images in the <code>DMZ</code> and <code>ISNIDE</code> directories, respectively. These ISOs contain the preconfigured settings specified in the <code>preseed.cfg</code> files.
 
