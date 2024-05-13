@@ -13,7 +13,7 @@ To use this script, you need to install the following packages:
 To use this script, follow these steps:
 1. Clone this repository using Git:
 
-       $ git clone https://github.com/bergmann-max/debain-pressed-iso-generator.git
+       $ git clone https://github.com/bergmann-max/debain-preseed-iso-generator.git
 
 1.  Navigate to the cloned directory:
 
