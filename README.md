@@ -28,6 +28,11 @@ To use this script, follow these steps:
 
        $ ./debian-preseed-iso-generator.sh
 
-1. After the script has finished running, you will find the generated ISO images in the <code>DMZ</code> and <code>ISNIDE</code> directories, respectively. These ISOs contain the preconfigured settings specified in the <code>preseed.cfg</code> files.
+1. After the script has finished running, you will find the generated ISO images in the <code>DMZ</code> and <code>INSIDE</code> directories, respectively. These ISOs contain the preconfigured settings specified in the <code>preseed.cfg</code> files.
 
 That's it! Now you can use the generated ISOs to install Debian on multiple machines with the same preconfigured settings.
+
+## More
+
+- [Official documentation about automating the installation using preseeding](https://www.debian.org/releases/stable/amd64/apb.en.html)
+- [Example preseed file](https://www.debian.org/releases/stable/example-preseed.txt)
