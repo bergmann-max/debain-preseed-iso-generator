@@ -16,21 +16,52 @@ BASEDIR=$(dirname "$0")
 cd "${BASEDIR}" || exit
 
 
-# delet old ISO file
-if [ -f "${NETINST}" ]; then
-    rm --verbose "$NETINST"
+# Flag to determine if a new ISO was downloaded
+NEW_ISO_DOWNLOADED=false
+
+# If an ISO file already exists, verify its checksum
+if ls ${NETINST} 1>/dev/null 2>&1; then
+    echo "Existing ISO found. Verifying checksum..."
+    
+    # Get the expected checksum from the online source
+    EXPECTED_CHECKSUM=$(curl --silent ${CHECKSUM} | grep -Eo '^[a-f0-9]{64}' | head -n 1)
+    LOCAL_CHECKSUM=$(sha256sum ${NETINST} | awk '{print $1}')
+
+    if [[ "${EXPECTED_CHECKSUM}" == "${LOCAL_CHECKSUM}" ]]; then
+        echo "Checksum matches. No need to download a new ISO."
+    else
+        echo "Checksum mismatch! Downloading a new ISO..."
+        rm --verbose ${NETINST}
+
+        # Download the newest Debian netinstall ISO
+        wget --recursive --no-host-directories --cut-dirs=5 --no-parent \
+             --accept "debian-[!mac!edu]*-amd64-netinst.iso" --reject "*update*" \
+             ${NETINSTISO} --directory-prefix="./"
+
+        # Verify the checksum of the downloaded ISO
+        if [[ -n $(head --lines=1 <(curl --silent ${CHECKSUM} 2> /dev/null) | sha256sum --check --quiet) ]]; then
+            printf "\nAbort: wrong ISO\n"
+            exit 1
+        fi
+
+        echo "ISO successfully downloaded and verified."
+        NEW_ISO_DOWNLOADED=true
+    fi
+else
+    echo "No existing ISO found. Downloading..."
+    wget --recursive --no-host-directories --cut-dirs=5 --no-parent \
+         --accept "debian-[!mac!edu]*-amd64-netinst.iso" --reject "*update*" \
+         ${NETINSTISO} --directory-prefix="./"
+
+    # Verify the checksum of the downloaded ISO
+    if [[ -n $(head --lines=1 <(curl --silent ${CHECKSUM} 2> /dev/null) | sha256sum --check --quiet) ]]; then
+        printf "\nAbort: wrong ISO\n"
+        exit 1
+    fi
+
+    echo "ISO successfully downloaded and verified."
+    NEW_ISO_DOWNLOADED=true
 fi
-
-
-# downlowd the newest debian-*-amd64-netinst.iso
-wget --recursive --no-host-directories --cut-dirs=5 --no-parent --accept "debian-[!mac!edu]*-amd64-netinst.iso" --reject "*update*" ${NETINSTISO} --directory-prefix="./"
-
-# verify the checksum
-if [[ -n $(head --lines=1 <(curl --silent ${CHECKSUM} 2> /dev/null) | sha256sum --check --quiet) ]]; then
-    printf "\nAbort: wrong iso\n"
-    exit
-fi
-
 
 # start a for loop for every pressed
 ENVIRONMENTS=(
