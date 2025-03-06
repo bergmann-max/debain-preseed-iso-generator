@@ -15,10 +15,6 @@ CHECKSUM="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/SHA256SUMS"
 BASEDIR=$(dirname "$0")
 cd "${BASEDIR}" || exit
 
-
-# Flag to determine if a new ISO was downloaded
-NEW_ISO_DOWNLOADED=false
-
 # If an ISO file already exists, verify its checksum
 if ls ${NETINST} 1>/dev/null 2>&1; then
     echo "Existing ISO found. Verifying checksum..."
@@ -44,9 +40,8 @@ if ls ${NETINST} 1>/dev/null 2>&1; then
             exit 1
         fi
 
-        echo "ISO successfully downloaded and verified."
-        NEW_ISO_DOWNLOADED=true
     fi
+
 else
     echo "No existing ISO found. Downloading..."
     wget --recursive --no-host-directories --cut-dirs=5 --no-parent \
@@ -59,8 +54,6 @@ else
         exit 1
     fi
 
-    echo "ISO successfully downloaded and verified."
-    NEW_ISO_DOWNLOADED=true
 fi
 
 # start a for loop for every pressed
@@ -69,15 +62,11 @@ ENVIRONMENTS=(
     DMZ
 )
 
-
 for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
-
 
     ISOFILE="${ENVIRONMENT}-preseed-debian-netinst.iso"
 
-
     cd "${ENVIRONMENT}" || exit
-
 
     # if there is a tmp dir it gets deleted
     # sudo is needed because some of the files in the ISO tmp will not be deleted.
@@ -85,16 +74,13 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
 
-
     # possible old preseed ISO gets deleted
     if [ -f "${ISOFILE}" ]; then
         rm --verbose "${ISOFILE}"
     fi
 
-
     # unzip the newest debian-*-amd64-netinst.iso into a tmp dir
     7z x  ../debian-*-amd64-netinst.iso -o"${ISOFILEDIR}"
-
 
     # Put the  preseed.cfg into initrd
     chmod +w --recursive "${ISOFILEDIR}"/install.amd/
@@ -103,20 +89,16 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
     gzip "${ISOFILEDIR}"/install.amd/initrd
     chmod -w --recursive "${ISOFILEDIR}"/install.amd/
 
-
     # make a new checksum for the preseed iso
     cd isofiles || exit
     md5sum $(find -follow -type f) > md5sum.txt
     cd .. || exit
 
-
     # make a preseed iso
     genisoimage -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o "${ISOFILE}" "${ISOFILEDIR}"
 
-
     # make the preseed iso bootable
     isohybrid "${ISOFILE}"
-
 
     # delet tmp dir
     # sudo is needed because some of the files in the ISO tmp will not be deleted
@@ -124,7 +106,7 @@ for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
         sudo rm --force --recursive "${ISOFILEDIR}"
     fi
 
-
     cd ..
 
 done
+
